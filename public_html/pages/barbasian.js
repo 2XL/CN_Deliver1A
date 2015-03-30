@@ -47,8 +47,9 @@ function barbasian() {
     nwkSize.forEach(function (value, idx) {
 	radioSizeBtn = $('<input type="radio" name="nwkSize" id="radioSizeId' + idx + '" value=' + value + ' />');
 	radioSizeBtn.appendTo('#radioSize');
-	radioSizeLabel = $('<label for="radioSizeId' + idx + '">' + value + '</label>');
+	radioSizeLabel = $('<label for="radioSizeId' + idx + '">' + value + '</label><br>');
 	radioSizeLabel.appendTo('#radioSize');
+	
     });
 
 
@@ -61,7 +62,7 @@ function barbasian() {
     avgDegree.forEach(function (value, idx) {
 	radioDegreeBtn = $('<input type="radio" name="avgDegree" id="radioDegreeId' + idx + '" value=' + value + ' />');
 	radioDegreeBtn.appendTo('#radioDegree');
-	radioDegreeLabel = $('<label for="radioDegreeId' + idx + '">' + value + '</label>');
+	radioDegreeLabel = $('<label for="radioDegreeId' + idx + '">' + value + '</label><br>');
 	radioDegreeLabel.appendTo('#radioDegree');
     });
 
@@ -322,7 +323,7 @@ function barbasian() {
 
     console.log("barbasian.js/loaded ¿!");
 
-    this.plot(5, 6);
+   //  this.plot(5, 6);
 
 }
 
