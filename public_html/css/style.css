@@ -10,8 +10,9 @@ and open the template in the editor.
 
 
 #container {
+    
     max-width: fit-content;
     height: 800px;
     margin: auto;
 }
-
+ 

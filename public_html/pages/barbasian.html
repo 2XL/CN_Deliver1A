@@ -26,13 +26,15 @@ and open the template in the editor.
 	<script src="../js/libs/d3/d3.v3.js" charset="utf-8"></script>
 	<script src="../js/libs/twitter-bootstrap/js/bootstrap.js" type="text/javascript"></script>
 	<link rel="stylesheet" type="text/css" href="../js/libs/twitter-bootstrap/css/bootstrap.css">
-
+	
+	<link rel="stylesheet" type="text/css" href="../css/barbasian.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
 	<script src="barbasian.js" type="text/javascript"></script>
 	<script src="barbasian-graph.js" type="text/javascript"></script>
 
     </head>
     <body onload="BA = new barbasian()">
+
 	<div id="top">
 	    <!--
 	    Statement: 
@@ -46,27 +48,63 @@ and open the template in the editor.
 	    Build networks of different sizes (from 1000 to 100000 nodes), and with different average degree (2, 4, 6, ...).
 	    -->
 	</div> 
-	<div id="mid">
-	    Todo:
-	    <div id="content" onclick="BA.replot(); displayHistogram(BA)">
-		<div id="radioSize"></div>
-		<br>    
-		<div id="radioDegree"></div>
+
+	<div id="content" onclick="">
+	    <div class="row">
+		<div class="col-xs-4 col-md-4">
+		    <div class="row">
+			<div class="col-xs-3"> 
+			    <label>
+				Graph Size:
+			    </label>
+			</div>
+			<div class="col-xs-9"> 
+			    <div id="radioSize"></div>
+			</div>
+		    </div>
+		</div>
+		<div class="col-xs-4 col-md-4">
+		    <div class="row">
+			<div class="col-xs-3"> 
+			    <label>
+				Graph Degree:
+			    </label>
+			</div>
+			<div class="col-xs-9"> 
+			    <div id="radioDegree"></div>
+			</div>
+		    </div>
+
+		</div> 
+		<div class="col-xs-4 col-md-4"> 
+		    <div class="row">
+
+			<div class="btn btn-primary">
+			    Export as JSON
+			</div> 
+		    </div>
+		    <div class="row"> 
+			<div class="btn btn-info">
+			    Export to Pajek
+			</div>
+		    </div>
+		    <div>
+			<div class="btn btn-success">
+			    Plot Diagram			    
+			</div>
+		    </div>
+		</div>  
 	    </div>
 	</div>
-	<hr>
-	<div id="bottom"> 
-	    <!-- 
-		deploy the content that has to be displayed by get attributes
-		if exist call function else do anything
-	    -->
-	    
-	</div> 
+	<hr> 
+	<div id="mid"> 
 
-	<div id="container"></div>
-	<hr>
-	<div id="graph"></div>
-	<!--
+	</div>
+ 
+	<div id="bottom">  
+	</div>   
+	<div id="container"></div>  
+	<div id="graph"></div> 
 	<hr> 
 	<div id="jungle">
 	    JUNGLE
@@ -76,7 +114,6 @@ and open the template in the editor.
 	    <a href="https://compuzzle.wordpress.com/2015/02/03/generating-barabasi-albert-model-graphs-in-clojure/">
 		Code Ref
 	    </a>
-	</div>
-	-->
+	</div> 
     </body>
 </html>
