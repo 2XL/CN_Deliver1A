@@ -1,10 +1,9 @@
+"use strict";
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-
 
 /**
  * 
@@ -12,12 +11,22 @@
  * @returns {barbasian}
  */
 function barbasian() {
-    
+
+    console.log("barbasian.js/loading...");
+
+    /* start setting variables */
+    /**************************************************************************/
     var stats = {
 	data: {},
 	stack: []
     };
-    
+
+    var config = {
+	size: 1000,
+	degree: 6,
+	seed: 5
+    };
+
     /* 
      * @param {type} size: number of nodes 
      * @param {type} degree: avg amount of edges = total(#edges)/total(#num)
@@ -26,20 +35,17 @@ function barbasian() {
     // de configuracio y posteriorment actualitzar el graf
     var degree = 6;
     var size = 5;
-   // var m = degree / 2;	// 3
+    // var m = degree / 2;	// 3
 
-    console.log("barbasian.js/loading...");
+    /* start user interface */
+    /**************************************************************************/
 
-
-    var nwkSize = [100, 1000, 10000, 100000];	// opcions per el selector
+    var nwkSize = [10, 50, 100, 1000, 10000, 100000];	// opcions per el selector
     var avgDegree = [2, 4, 6, 8];
     console.log("0.	Start the configuration selectors...");
 
-
     var radioSize = document.getElementById("radioSize");
     var radioDegree = document.getElementById("radioDegree");
-
-// http://stackoverflow.com/questions/5550785/how-to-create-a-radio-button-dynamically-with-jquery
 
 // hack everything with Jquery
     var radioSizeLabel = $('');
@@ -49,12 +55,7 @@ function barbasian() {
 	radioSizeBtn.appendTo('#radioSize');
 	radioSizeLabel = $('<label for="radioSizeId' + idx + '">' + value + '</label><br>');
 	radioSizeLabel.appendTo('#radioSize');
-	
     });
-
-
-
-
 
 // hack everything with Jquery
     var radioDegreeLabel = $('');
@@ -66,55 +67,69 @@ function barbasian() {
 	radioDegreeLabel.appendTo('#radioDegree');
     });
 
-
-
-
     console.log("1. Inject the content in the content div...");
-
-
-
-
-
 
 // propose an datastructure once the setting is done
 
-    var config = {
-	size: 1000,
-	degree: 6,
-	seed: 5
-    };
 
+    /* auxiliary functions */
+    /**************************************************************************/
 
-    node = function (id) {
+    function node(id) {
 	this.id = id;
-	this.vertex = [];    // vertex are nodes
-	this.putVertex = function (n) {
-	    if (this.id === n.id)
-		return false;
-	    if (this.vertex[n.id] === undefined) {
-		this.vertex[n.id] = n;
-		return true;
+	// this.vertex = {};    // vertex are nodes
+	// keyvalue search instead of an array
+	this.vertexIn = {};
+	this.vertexOut = {};
+
+
+	this.putVertex = function (n, forceIn) {
+	  //  console.log(this);
+	  //  console.log(n);
+	    if (forceIn === undefined) {
+		if (this.id === n.id)
+		    return false;
+		if (this.vertexOut[n.id] === undefined) {
+		    this.vertexOut[n.id] = n;
+		    n.putVertex(this, true);
+		    return true;
+		} else {
+		    return false;
+		}
 	    } else {
-		return false;
+		this.vertexIn[n.id] = n;
 	    }
 	};
+
+
 	// nodes are nodes and vertex are nodes...
-	this.lenVertex = function () {
-	    return (cleanArray((this.vertex))).length;
+	this.lenVertexIn = function () {
+	    return Object.keys(this.vertexIn).length;
 	};
+
+	this.lenVertexOut = function () {
+	    return Object.keys(this.vertexOut).length;
+	};
+
+	this.lenVertex = function () {
+	    return Object.keys(this.vertexIn).length;
+	};
+
 	this.getId = function () {
 	    return this.id;
 	};
 
-    };
+    }
 
+    function addAxisToNodes(jsonObject) {
+	jsonObject.nodes.forEach(function (node, i, a) {
+	    node.x = Math.cos(Math.PI * 2 * i / a.length);
+	    node.y = Math.sin(Math.PI * 2 * i / a.length);
+	});
+	return jsonObject;
+    }
 
-    this.getStats = function(){
-	return stats;
-    };
-    
-
-    initSeeding = function (size) {
+    function initSeeding(size) {
 	var seed = [];
 	var n;
 	for (var i = 0; i < size; i++) {
@@ -132,12 +147,17 @@ function barbasian() {
 
 	});
 	return seed;
+    }
+    ;
+
+    /* class methods */
+    /**************************************************************************/
+
+    this.getStats = function () {
+	return stats;
     };
 
-
-
 // plot from jsonFile
-
     this.plotStackJsonPath = function (jsonPath) {
 	console.log("plotStackPath");
 	// signals : namespace
@@ -148,48 +168,31 @@ function barbasian() {
 	    settings: {
 		defaultNodeColor: '#ec5148'
 	    }
-	}, function (s) {
-	    // display nodes in an circle
-	    s.graph.nodes().forEach(function (node, i, a) {
-		node.x = Math.cos(Math.PI * 2 * i / a.length);
-		node.y = Math.sin(Math.PI * 2 * i / a.length);
-	    });
-	    // Start the layout
-	    s.startForceAtlas2();
-	});
+	}
+	);
 
     };
 
+
 // plot from Object
     this.plotStackJsonObject = function (jsonObject) {
-	console.log("plotStackObject");
-	// signals : namespace
-	// store loval reference for brevety
-
-	s = new sigma({
+	var s = new sigma({
 	    graph: jsonObject,
 	    container: 'container',
 	    settings: {
 		defaultNodeColor: '#ec5148'
-	    }}
-	);
-	// display nodes in an circle
-	s.graph.nodes().forEach(function (node, i, a) {
-	    node.x = Math.cos(Math.PI * 2 * i / a.length);
-	    node.y = Math.sin(Math.PI * 2 * i / a.length);
+	    }
 	});
-	// Start the layout
-	s.startForceAtlas2();
 
     };
 
-    /****************************************************************************/
+    /* visualisation methods */
+    /**************************************************************************/
 
-
-    this.plot = function (size, degree) {
-	console.log("plot");
+    this.init = function (size, degree) {
+	console.log("init/ini");
 	var stack = [];
-	var m = degree/ 2;
+	var m = degree / 2;
 	// represent an array of size ( size ) of nodes and each node is of degree x
 
 
@@ -221,7 +224,7 @@ function barbasian() {
 
 	    var nextInterval; // total amount of vertex
 	    stack.forEach(function (item, idx, all) {
-		nextInterval = item.lenVertex();
+		nextInterval = item.lenVertex(); // NONE EFFICIENT
 		while (nextInterval > 0) {
 		    table[tableIdx] = item.id;
 		    tableIdx++;
@@ -234,7 +237,7 @@ function barbasian() {
 
 	    // push node as other node vertex
 
-	    steps = m;
+	    steps = degree;
 	    var list = [];
 	    while (steps > 0) {
 		// generate random within interval
@@ -246,7 +249,7 @@ function barbasian() {
 
 		    list.push(cand);
 		    n.putVertex(targetNode);
-		    targetNode.putVertex(n);
+		   // targetNode.putVertex(n);
 		    // vincular vertices
 		    // add source vertex,
 		    // add target vertex,
@@ -264,20 +267,17 @@ function barbasian() {
 	// console.log(stack);
 	// draw the current stack with the library provided... etc...
 	var data = stackToJSON(stack);
-	console.log(data);
+//	console.log(data);
+	data = addAxisToNodes(data);
+//	console.log(data);
 	this.plotStackJsonObject(data);
-	
+
 	stats = {
 	    data: data,
 	    stack: stack
 	};
+	console.log("init/end");
     };
-
-
-
-
-
-
 
     this.replot = function () {
 
@@ -309,21 +309,31 @@ function barbasian() {
 	    console.log("replot!!!");
 	    console.info("degr: " + degreeRadio);
 	    console.info("size: " + sizeRadio);
-	    this.plot(sizeRadio, degreeRadio);
+	    this.init(sizeRadio, degreeRadio);
 	    console.log("refresh");
 	}
 
 	// check them from the domElements , only call if both are defined
-	
-	 
+
+
 
     };
 
-    
+    this.exportJSON = function () {
+	console.info("Export JSON");
+	var data = this.getStats();
+
+    };
+
+    this.exportPAJEK = function () {
+	console.info("export PAJEK");
+	var data = this.getStats();
+
+    };
 
     console.log("barbasian.js/loaded ¿!");
 
-   //  this.plot(5, 6);
+    this.init(config.seed, config.degree);
 
 }
 
