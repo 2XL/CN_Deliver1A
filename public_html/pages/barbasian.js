@@ -40,7 +40,7 @@ function barbasian() {
     /* start user interface */
     /**************************************************************************/
 
-    var nwkSize = [10, 50, 100, 1000, 10000, 100000];	// opcions per el selector
+    var nwkSize = [20, 50, 100, 1000, 10000, 100000];	// opcions per el selector
     var avgDegree = [2, 4, 6, 8];
     console.log("0.	Start the configuration selectors...");
 
@@ -176,6 +176,7 @@ function barbasian() {
 
 // plot from Object
     this.plotStackJsonObject = function (jsonObject) {
+	document.getElementById("container").innerHTML = "";
 	var s = new sigma({
 	    graph: jsonObject,
 	    container: 'container',
@@ -255,7 +256,7 @@ function barbasian() {
 		    // add target vertex,
 		    steps--;
 		} else {
-		  //  console.log("skip");
+		    //  console.log("skip");
 		}
 	    }
 
@@ -324,14 +325,10 @@ function barbasian() {
 	    console.info("degr: " + degreeRadio);
 	    console.info("size: " + sizeRadio);
 	} else {
-	    document.getElementById("container").innerHTML = "";
-	    console.log("replot!!!");
+	    console.log("replotable!!!");
 	    console.info("degr: " + degreeRadio);
 	    console.info("size: " + sizeRadio);
-
 	    console.log("refresh");
-
-	 
 	    return {degree: degreeRadio, size: sizeRadio};
 	}
 
@@ -341,7 +338,16 @@ function barbasian() {
 
     this.exportJSON = function () {
 	console.info("Export JSON");
-	var data = this.getStats();
+	var setting = this.getSetting();
+
+	if (setting === false) {
+	    console.log("Setting incomplete...");
+	} else {
+
+	    var data = this.init(setting.size, setting.degree);
+	    // check them from the domElements , only call if both are defined
+	    downloadJSON(data, "S"+setting.size+"-D"+setting.degree+".json");
+	}
 
     };
 

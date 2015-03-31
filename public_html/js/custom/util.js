@@ -4,13 +4,39 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
- 
+
+// ADAPTER
+
+var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
+var URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+window.saveAs = window.saveAs || window.webkitSaveAs || window.mozSaveAs || window.msSaveAs;
+var BrowserSupportedMimeTypes = {
+    "image/jpeg": true,
+    "image/png": true,
+    "image/gif": true,
+    "image/svg+xml": true,
+    "image/bmp": true,
+    "image/x-windows-bmp": true,
+    "image/webp": true,
+    "audio/wav": true,
+    "audio/mpeg": true,
+    "audio/webm": true,
+    "audio/ogg": true,
+    "video/mpeg": true,
+    "video/webm": true,
+    "video/ogg": true,
+    "text/plain": true,
+    "text/html": true,
+    "text/xml": true,
+    "application/xhtml+xml": true,
+    "application/json": true
+};
 
 function functionName(fun) {
-  var ret = fun.toString();
-  ret = ret.substr('function '.length);
-  ret = ret.substr(0, ret.indexOf('('));
-  return ret;
+    var ret = fun.toString();
+    ret = ret.substr('function '.length);
+    ret = ret.substr(0, ret.indexOf('('));
+    return ret;
 }
 
 function createRadioElement(name, checked) {
@@ -57,9 +83,9 @@ function stackToJSON(stack) {
 
 // por cada vertice del nodo añadir un edge en el json outputStack
 //	console.log(item);
-	
 
-	for(var key in item.vertexIn){
+
+	for (var key in item.vertexIn) {
 	    var node = item.vertexIn[key];
 	    var targetId = "n" + node.id;
 	    var edge = {
@@ -67,8 +93,9 @@ function stackToJSON(stack) {
 		source: sourceId,
 		target: targetId
 	    };
-	    jsonStack.edges.push(edge);   
-	};
+	    jsonStack.edges.push(edge);
+	}
+	;
 
     });
     // omplir el stkeleton
@@ -94,4 +121,22 @@ function indexOf(needle) {
 
     return indexOf.call(this, needle);
 }
-;
+
+
+
+/* saving json string to client pc using HTML5 API */
+
+function downloadJSON(dataJSON, nameDownload) {
+    var strJSON = JSON.stringify(dataJSON);
+
+    var blob = new Blob([strJSON], {type: "application/json"});
+
+    saveAs(blob, nameDownload);
+    //var url = URL.createObjectURL(blob);
+    //  window.open(url, "downloadJSON.json");
+
+}
+
+/* 
+ * saving a file with FileSaver.js
+ */
