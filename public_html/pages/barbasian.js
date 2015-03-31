@@ -346,15 +346,23 @@ function barbasian() {
 
 	    var data = this.init(setting.size, setting.degree);
 	    // check them from the domElements , only call if both are defined
-	    downloadJSON(data, "S"+setting.size+"-D"+setting.degree+".json");
+	    downloadJSON(data, "S" + setting.size + "-D" + setting.degree + ".json");
 	}
 
     };
 
     this.exportPAJEK = function () {
 	console.info("export PAJEK");
-	var data = this.getStats();
+	var setting = this.getSetting();
 
+	if (setting === false) {
+	    console.log("Setting incomplete...");
+	} else {
+
+	    var data = this.init(setting.size, setting.degree);
+	    // check them from the domElements , only call if both are defined
+	    JSON2Pajek(data, "S" + setting.size + "-D" + setting.degree + ".net"); // .NET
+	}
     };
 
     console.log("barbasian.js/loaded ¿!");

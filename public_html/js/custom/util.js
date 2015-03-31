@@ -124,7 +124,9 @@ function indexOf(needle) {
 
 
 
-/* saving json string to client pc using HTML5 API */
+/* 
+ * Saving a file with FileSaver.js
+ */
 
 function downloadJSON(dataJSON, nameDownload) {
     var strJSON = JSON.stringify(dataJSON);
@@ -132,11 +134,59 @@ function downloadJSON(dataJSON, nameDownload) {
     var blob = new Blob([strJSON], {type: "application/json"});
 
     saveAs(blob, nameDownload);
+    //saving json string to client pc using HTML5 API
     //var url = URL.createObjectURL(blob);
     //  window.open(url, "downloadJSON.json");
 
 }
 
-/* 
- * saving a file with FileSaver.js
+
+
+/*
+ * Converting JSON to Pajek
  */
+
+function JSON2Pajek(dataJSON, nameDownload) {
+
+    // json object is
+    var json = {
+	nodes: [
+	    {
+		id: "n#",
+		label: "l#",
+		size: "#"
+	    }
+	],
+	edges: [
+	    {
+		id: "#",
+		source: "n#",
+		target: "n#"
+	    }
+	]
+    };
+
+    var pajekShape = ["box", "triangle", "diamond", "ellipse"]
+
+    var stringBuffer = "";
+    var verticesHead = "*Vertices " + dataJSON.nodes.length + "\n";
+    var vertices = ""; // aixo nomes si vull afegir el pes
+    for (var key in dataJSON.nodes) {
+// console.log(data.nodes[key])
+// this way or customize an toString 4 node class.
+	vertices += parseInt((dataJSON.nodes[key].id).substr(1)) + 1 + " \"" + dataJSON.nodes[key].label + "\"\n";
+// " + dataJSON.nodes[key].x + " " + dataJSON.nodes[key].y + " box\n";
+// console.log(vertex)
+    }
+    var edgesHead = "*Edges\n";
+    var edges = "";
+    for (key in dataJSON.edges) {
+// console.log(data.nodes[key])
+	edges += parseInt((dataJSON.edges[key].source).substr(1)) + 1 + " " + (parseInt((dataJSON.edges[key].target).substr(1)) + 1) + "\n";
+	// console.log(edges);
+    }
+
+    stringBuffer = verticesHead + vertices + edgesHead + edges;
+    var blob = new Blob([stringBuffer], {type: 'text/plain'});
+    saveAs(blob, nameDownload);
+}
