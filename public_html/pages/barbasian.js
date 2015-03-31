@@ -24,7 +24,7 @@ function barbasian() {
     var config = {
 	size: 1000,
 	degree: 6,
-	seed: 5
+	seed: 10,
     };
 
     /* 
@@ -84,8 +84,8 @@ function barbasian() {
 
 
 	this.putVertex = function (n, forceIn) {
-	  //  console.log(this);
-	  //  console.log(n);
+	    //  console.log(this);
+	    //  console.log(n);
 	    if (forceIn === undefined) {
 		if (this.id === n.id)
 		    return false;
@@ -189,7 +189,7 @@ function barbasian() {
     /* visualisation methods */
     /**************************************************************************/
 
-    this.init = function (size, degree) {
+    this.init = function (size, degree, plot) {
 	console.log("init/ini");
 	var stack = [];
 	var m = degree / 2;
@@ -249,13 +249,13 @@ function barbasian() {
 
 		    list.push(cand);
 		    n.putVertex(targetNode);
-		   // targetNode.putVertex(n);
+		    // targetNode.putVertex(n);
 		    // vincular vertices
 		    // add source vertex,
 		    // add target vertex,
 		    steps--;
 		} else {
-		    console.log("skip");
+		  //  console.log("skip");
 		}
 	    }
 
@@ -268,25 +268,44 @@ function barbasian() {
 	// draw the current stack with the library provided... etc...
 	var data = stackToJSON(stack);
 //	console.log(data);
-	data = addAxisToNodes(data);
+	// if true plot it asking the axis
+	if (plot) {
+	    data = addAxisToNodes(data);
 //	console.log(data);
-	this.plotStackJsonObject(data);
+	    this.plotStackJsonObject(data);
 
-	stats = {
-	    data: data,
-	    stack: stack
-	};
-	console.log("init/end");
+	    stats = {
+		data: data,
+		stack: stack
+	    };
+	    console.log("init/end");
+	} else { // otherwise retrieve the data for a data handler
+	    return data;
+	}
     };
 
     this.replot = function () {
 
 	// generate index and weights
+
+
+	var setting = this.getSetting();
+
+	if (setting === false) {
+	    console.log("Setting incomplete...");
+	} else {
+
+	    this.init(setting.size, setting.degree, true);
+	    // check them from the domElements , only call if both are defined
+
+	}
+
+    };
+
+    this.getSetting = function () {
+
 	var sizeRadio;
 	var degreeRadio;
-	var data;
-	var list;
-
 	// get the default constraints
 	if ($('input[name=nwkSize]:checked').length > 0) {
 	    // collect the value
@@ -309,15 +328,16 @@ function barbasian() {
 	    console.log("replot!!!");
 	    console.info("degr: " + degreeRadio);
 	    console.info("size: " + sizeRadio);
-	    this.init(sizeRadio, degreeRadio);
+
 	    console.log("refresh");
+
+	 
+	    return {degree: degreeRadio, size: sizeRadio};
 	}
 
-	// check them from the domElements , only call if both are defined
-
-
-
+	return false;
     };
+
 
     this.exportJSON = function () {
 	console.info("Export JSON");
@@ -333,7 +353,7 @@ function barbasian() {
 
     console.log("barbasian.js/loaded ¿!");
 
-    this.init(config.seed, config.degree);
+    this.init(config.seed, config.degree, true);
 
 }
 
