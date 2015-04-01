@@ -233,6 +233,8 @@ function barbasian() {
 	    // fer un array amb 1000 posicions i ficar l'id del node de manera consecutiva 
 	    // compensar espai per computacio... 
 
+// this should be refactored instead of having to recalculate everything
+// use dynamic append in the table...
 	    var nextInterval; // total amount of vertex
 	    stack.forEach(function (item, idx, all) {
 		nextInterval = item.lenVertexOut(); // NONE EFFICIENT

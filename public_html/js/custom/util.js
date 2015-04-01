@@ -190,3 +190,8 @@ function JSON2Pajek(dataJSON, nameDownload) {
     var blob = new Blob([stringBuffer], {type: 'text/plain'});
     saveAs(blob, nameDownload);
 }
+
+
+Array.prototype.insert = function (index, item) {
+  this.splice(index, 0, item);
+};
