@@ -12,3 +12,8 @@ body{
     margin: 100px;
     
 }
+
+#content{
+    padding: 100px;
+    // padding or margin of the div content 
+}

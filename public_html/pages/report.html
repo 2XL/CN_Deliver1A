@@ -22,7 +22,7 @@ and open the template in the editor.
     </head>
     <body>
 	<div>
-	    Here goes the report...
+	    Here goes the report...<a href="barbasian.html">graph</a>
 	</div>
 	<br>
 	<div>
@@ -39,7 +39,36 @@ and open the template in the editor.
 		Build networks of different sizes (from 1000 to 100000 nodes), 
 		and with different average degree (2, 4, 6, ...).
 	    </p>
+	    <div class="content">
 
+		<form>
+		    <div class="form-group">
+			<label for="ddist">
+			    Degree Distribution
+			</label>
+			<input type="text" class="form-control" id="ddist">
+		    </div>
+		    <div class="form-group">
+			<label for="ccdd">
+			    Complementary Cumulative Degree Distribution
+			</label>
+			<input type="text" class="form-control" id="ccdd">
+		    </div> 
+		    <div class="form-group">	<label for="mle">
+			    Maximum Likelihood Estimatino
+			</label>
+			<input type="text" class="form-control" id="mle">
+
+		    </div>
+		    <div class="form-group">
+			<label>
+
+			</label>
+
+		    </div>
+
+		</form>
+	    </div>
 	    <!--
 		<K> = 2m // average degree if tge resulting network
 		m: creation degree of each joining node
