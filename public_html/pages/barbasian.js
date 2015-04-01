@@ -67,6 +67,16 @@ function barbasian() {
 	radioDegreeLabel.appendTo('#radioDegree');
     });
 
+
+// select dafault settings
+    var defaultSize = 1;
+    var defaultDegree = 1;
+    
+    document.getElementById('radioSizeId'+defaultSize).checked = true;
+    document.getElementById('radioDegreeId'+defaultDegree).checked = true;
+//    
+
+
     console.log("1. Inject the content in the content div...");
 
 // propose an datastructure once the setting is done
@@ -112,7 +122,7 @@ function barbasian() {
 	};
 
 	this.lenVertex = function () {
-	    return Object.keys(this.vertexIn).length;
+	    return Object.keys(this.vertexIn).length + Object.keys(this.vertexOut).length;
 	};
 
 	this.getId = function () {
@@ -225,7 +235,7 @@ function barbasian() {
 
 	    var nextInterval; // total amount of vertex
 	    stack.forEach(function (item, idx, all) {
-		nextInterval = item.lenVertex(); // NONE EFFICIENT
+		nextInterval = item.lenVertexOut(); // NONE EFFICIENT
 		while (nextInterval > 0) {
 		    table[tableIdx] = item.id;
 		    tableIdx++;

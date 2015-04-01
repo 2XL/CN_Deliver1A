@@ -13,6 +13,19 @@ body {
   font: 10px sans-serif;
 }
 */
+
+.bar {
+    fill: steelblue;
+}
+
+.bar:hover {
+    fill: brown;
+}
+
+.axis {
+    font: 10px sans-serif;
+}
+
 .axis path,
 .axis line {
     fill: none;
@@ -24,14 +37,16 @@ body {
     display: none;
 }
 
-.line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
+.axis text {
+  font: 10px sans-serif;
 }
- 
 
- 
+
+
+
+
+
+
 #container{ 
     background: aliceblue;
 }
@@ -43,3 +58,16 @@ body {
 #content{
     background: turquoise;
 }
+
+.chart rect {
+    fill: steelblue;
+}
+
+.chart text {
+    fill: white;
+    font: 10px sans-serif;
+    text-anchor: middle;
+}
+
+ 
+ 

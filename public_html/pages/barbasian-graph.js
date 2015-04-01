@@ -29,7 +29,7 @@ var graphDiv = document.getElementById("graph");
 // loop through
 
 
-computeHistogram = function (BA) {
+computeHistogram = function (BA, simple) {
 
     var stats = BA.getStats();
 // fer el hitmiss histogram 
@@ -61,22 +61,142 @@ computeHistogram = function (BA) {
 	    frq: histogram[idx]
 	});
     }
-    console.log(histogram);
-    console.log(histObj);
-    return histObj;
+
+    if (simple)
+    {
+
+
+	var histSimple =
+		{
+		    key: "Simple Histogram",
+		    values: [
+		    ]
+		}
+	;
+
+	for (var key in histogram) {
+	    var value = {};
+	    value.label = (key).toString();
+	    value.frequency = histogram[key];
+	    histSimple.values.push(value);
+	}
+//	console.log(histogram);
+//	console.log(histSimple);
+	return histSimple;
+    }
+    else
+    {
+	console.log(histObj);
+	return histObj;
+    }
 };
 
+/*
+ * Requires nvd3 
+ */
+plotSimpleBarChart = function (data) {
+    // data is an array
+    data = data.values;
+   // console.log(data);
 
+    document.getElementsByClassName('chart')[0].innerHTML = "";
+    // preparing margins
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+	    height = 500 - margin.top - margin.bottom;
+
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+	    
+	//    console.log(x);
+	    
+    var y = d3.scale.linear()
+	    .range([height, 0]);
+
+	    console.log(y);
+
+    // Adding axes x
+    var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left");
+
+
+    var chart = d3.select(".chart")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	    .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    x.domain(data.map(function (d) {
+	return d.label;
+    }));
+
+    y.domain([0, d3.max(data, function (d) {
+	    return d.frequency;
+	})]);
+
+    var barWidth = width / data.length;
+
+    var bar = chart.selectAll("g")
+	    .data(data)
+	    .enter().append("g")
+	    .attr("transform", function (d, i) {
+		return "translate(" + i * barWidth + ",0)";
+	    });
+
+    // append
+
+    chart.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(xAxis);
+
+    chart.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis);
+
+
+
+
+    bar.append("rect")
+	    .attr("y", function (d) {
+		return y(d.frequency);
+	    })
+	    .attr("height", function (d) {
+		return height - y(d.frequency);
+	    })
+	    .attr("width", barWidth - 1);
+
+    bar.append("text")
+	    .attr("x", barWidth / 2)
+	    .attr("y", function (d) {
+		return y(d.frequency) + 3;
+	    })
+	    .attr("dy", ".75em")
+	    .text(function (d) {
+		return d.frequency;
+	    });
+
+    function type(d) {
+	d.frequency = +d.frequency; // coerce to number
+	return d;
+    }
+};
 
 plotHistogram = function (JSONData) {
-
-
 
     var targetDOM = "#graph";
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
 	    height = 500 - margin.top - margin.bottom;
- 
+
 
     var x = d3.scale.linear()
 	    .range([0, width]);
@@ -106,12 +226,13 @@ plotHistogram = function (JSONData) {
 	    .append("g")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
     console.log(data);
     var data = JSONData.slice();
-    
+
     x.domain(d3.extent(data, function (d) {
 	// return d.date;
-	
+
 	return d.idx;
     }));
     y.domain(d3.extent(data, function (d) {
@@ -138,11 +259,18 @@ plotHistogram = function (JSONData) {
 	    .datum(data)
 	    .attr("class", "line")
 	    .attr("d", line);
- 
+
 };
 
 
-displayHistogram = function(BA){
-    document.getElementById("graph").innerHTML = ""; 
+displayHistogram = function (BA) {
+    document.getElementById("graph").innerHTML = "";
     plotHistogram(computeHistogram(BA));
 };
+
+displayHistogramSimple = function (BA) {
+    document.getElementById("graph").innerHTML = "";
+    plotSimpleBarChart(computeHistogram(BA, true));
+}
+
+// TODO Angular JS,, programar por grid
