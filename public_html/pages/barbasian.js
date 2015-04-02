@@ -71,9 +71,9 @@ function barbasian() {
 // select dafault settings
     var defaultSize = 1;
     var defaultDegree = 1;
-    
-    document.getElementById('radioSizeId'+defaultSize).checked = true;
-    document.getElementById('radioDegreeId'+defaultDegree).checked = true;
+
+    document.getElementById('radioSizeId' + defaultSize).checked = true;
+    document.getElementById('radioDegreeId' + defaultDegree).checked = true;
 //    
 
 
@@ -222,42 +222,61 @@ function barbasian() {
 	var steps;
 	var n;
 	var start = stack.length; // 1st id = 5
-
+	var tableTest = [];
+	var table = []; // ck
+	var tableIdx = 0;
+	var first = true;
 	for (var i = start; i < size; i++) {
 
 	    // invoke a node
 	    n = new node(i);
-	    var table = []; // ck
-	    var tableIdx = 0;
+
 	    // calculate the probability matrix
 	    // fer un array amb 1000 posicions i ficar l'id del node de manera consecutiva 
 	    // compensar espai per computacio... 
 
 // this should be refactored instead of having to recalculate everything
 // use dynamic append in the table...
-	    var nextInterval; // total amount of vertex
-	    stack.forEach(function (item, idx, all) {
-		nextInterval = item.lenVertexOut(); // NONE EFFICIENT
-		while (nextInterval > 0) {
-		    table[tableIdx] = item.id;
-		    tableIdx++;
-		    nextInterval--;
-		}
-	    });
 
-//	console.log(tableIdx);
-//	console.log(table);
+	    if (first) {
+		var nextInterval; // total amount of vertex
+		stack.forEach(function (item, idx, all) {
+		    nextInterval = item.lenVertexOut(); // NONE EFFICIENT
+		    while (nextInterval > 0) {
+			table[tableIdx] = item.id;
+			tableIdx++;
+			nextInterval--;
+		    }
+		});
 
-	    // push node as other node vertex
+		tableTest = table;
+		first = false;
+	    } else {
 
+	    }
+
+	    /*
+	     console.log("INI... orig ->");
+	     console.log(tableIdx);
+	     console.log(table);
+	     console.log(tableTest.length);
+	     console.log(tableTest);
+	     console.log("<- test ...FIN");
+	     // push node as other node vertex
+	     */
+	    tableIdx = tableTest.length;
 	    steps = degree;
 	    var list = [];
+	    var listCand = [];
 	    while (steps > 0) {
 		// generate random within interval
 		// check if that node already has use
-		var cand = table[Math.floor((Math.random() * tableIdx))];
+		var candIdx = Math.floor((Math.random() * tableIdx));
+		var cand = table[candIdx];
+
 		if (list.indexOf(cand) === -1)
 		{
+		    listCand.push(candIdx);
 		    var targetNode = stack[cand];
 
 		    list.push(cand);
@@ -273,6 +292,15 @@ function barbasian() {
 	    }
 
 	    // push node to stack
+	    var candIdx;
+	//    console.log(listCand);
+	    for (var key in listCand) {
+		candIdx = tableTest[listCand[key]];
+	//	console.log(candIdx);
+		tableTest.splice(listCand[key], 0, candIdx);
+		tableTest.push(n.id);
+	    }
+
 	    stack.push(n);
 	}
 

@@ -192,6 +192,4 @@ function JSON2Pajek(dataJSON, nameDownload) {
 }
 
 
-Array.prototype.insert = function (index, item) {
-  this.splice(index, 0, item);
-};
+ 
