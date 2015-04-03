@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>CN Delivery 1 A</title>
+	<link rel="shortcut icon" href="../favicon.ico" >
+	<link rel="icon" href="obrasinf.gif" type="image/gif" >
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- 
+	Libs Util
+	-->
+	<script src="../js/libs/sigmajs/sigma.min.js" type="text/javascript"></script>
+	<script src="../js/libs/sigmajs/plugins/sigma.parsers.json.min.js" type="text/javascript"></script>
+	<script src="../js/libs/sigmajs/plugins/sigma.layout.forceAtlas2.min.js" type="text/javascript"></script>
+	<script src="../js/custom/util.js" type="text/javascript"></script>
+	<script src="../js/libs/jquery/jquery.js" type="text/javascript"></script>
+	<script src="../js/FileSaver.js" type="text/javascript"></script>
+
+
+	<!-- 
+	Libs Style
+	-->
+	<script src="../js/libs/d3/d3.v3.js" charset="utf-8"></script>
+	<script src="../js/nv.d3.min.js" type="text/javascript"></script>
+	<script src="../js/libs/twitter-bootstrap/js/bootstrap.js" type="text/javascript"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="../js/libs/twitter-bootstrap/css/bootstrap.css">
+
+	<link rel="stylesheet" type="text/css" href="../css/barbasian.css">
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+	<link rel="stylesheet" type="text/css" href="../css/nv.d3.min.css">
+	<script src="barbasian.js" type="text/javascript"></script>
+	<script src="barbasian-graph.js" type="text/javascript"></script>
+
+    </head>
+    <body onload="BA = new barbasian()">
+
+	<div id="top">
+	    <!--
+	    Statement: 
+	    <br>
+	    a) Generation of networks using the Barabasi & Albert preferential attachment model. 
+	    <br>
+	    Compute the <strong>degree distribution</strong> and the complementary cumulative degree distribution <strong>(CCDD)</strong>, using histograms in log scale. 
+	    <br>
+	    Fitting of the power-law exponent from the histograms, and using the maximum likelihood estimation <strong>(MLE)</strong> as it appears in Newman's review. 
+	    <br>
+	    Build networks of different sizes (from 1000 to 100000 nodes), and with different average degree (2, 4, 6, ...).
+	    -->
+	</div> 
+	<ul class="nav nav-tabs">
+	    <li  class="active"><a data-toggle="tab" href="#sectionA">Graph</a></li>
+	    <li><a data-toggle="tab" href="#sectionB">Plot</a></li>
+	    <!--
+	    <li class="dropdown">
+		<a data-toggle="dropdown" class="dropdown-toggle" href="#">Select: <b class="caret"></b></a>
+		<ul class="dropdown-menu">
+		    <li><a data-toggle="tab" href="#dropdown1">MID</a></li>
+		    <li><a data-toggle="tab" href="#dropdown2">BOTTOM</a></li>
+		</ul>
+	    </li>
+	    -->
+	    <li><a href="report.html">Report</a>
+
+	    </li>
+	</ul>
+
+
+
+	<div id="content" onclick="">
+	    <div class="row">
+		<div class="col-xs-4 col-md-4">
+		    <div class="row">
+			<div class="col-xs-3"> 
+			    <label>
+				Graph Size:
+			    </label>
+			</div>
+			<div class="col-xs-9"> 
+			    <div id="radioSize"></div>
+			</div>
+		    </div>
+		</div>
+		<div class="col-xs-4 col-md-4">
+		    <div class="row">
+			<div class="col-xs-3"> 
+			    <label>
+				Graph Degree:
+			    </label>
+			</div>
+			<div class="col-xs-9"> 
+			    <div id="radioDegree"></div>
+			</div>
+		    </div>
+
+		</div> 
+		<div class="col-xs-4 col-md-4"> 
+		    <div class="row" onclick="BA.exportJSON();"> 
+			<div class="btn btn-primary">
+			    Export as JSON
+			</div> 
+		    </div>
+		    <div class="row" onclick="BA.exportPAJEK();"> 
+			<div class="btn btn-info">
+			    Export to Pajek
+			</div>
+		    </div>
+		    <div class="row" onclick="displayHistogramSimple(BA);">
+			<div class="btn btn-success">
+			    Plot Diagram			    
+			</div>
+		    </div>
+		    <div class="row" onclick="BA.replot();">
+			<div class="btn btn-default">
+			    Plot Network			    
+			</div>
+		    </div>
+		</div>  
+	    </div>
+	</div>
+	<div class="tab-content">
+	    <div id="sectionA" class="tab-pane  fade in active ">
+		<div id="container"></div>  
+	    </div>
+
+
+	    <div id="sectionB" class="tab-pane fade"> 
+		<div id="graph"></div>  
+		<svg class="chart" id="chart" ></svg>
+	    </div>
+
+
+	    <div id="dropdown1" class="tab-pane fade">
+		<div id="mid"> 
+		    This is Akali
+		</div>
+	    </div>
+	    <div id="dropdown2" class="tab-pane fade">
+		<div id="bottom">  
+		    This is Shaco
+		</div>
+	    </div>
+
+
+	</div>
+
+	<!--
+		<div id="jungle">
+		    JUNGLE
+		    <a href="http://en.wikipedia.org/wiki/Barab%C3%A1si%E2%80%93Albert_model">
+			Wiki Ref
+		    </a>
+		    <a href="https://compuzzle.wordpress.com/2015/02/03/generating-barabasi-albert-model-graphs-in-clojure/">
+			Code Ref
+		    </a>
+		</div> 
+	-->
+    </body>
+</html>
