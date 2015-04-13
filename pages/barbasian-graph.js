@@ -26,15 +26,14 @@ var graphDiv = document.getElementById("graph");
  * 
  */
 
-// loop through
-
-
-computeHistogram = function (BA, simple) {
+// loop through 
+computeHistogram = function (simple, BA) {
 
     var stats = BA.getStats();
 // fer el hitmiss histogram 
     var histogram = [];
     var histObj = [];
+
     stats.stack.forEach(function (item, idx, all) {
 //	console.log(item.lenVertex());
 	var size = item.lenVertex();
@@ -97,7 +96,7 @@ computeHistogram = function (BA, simple) {
 plotSimpleBarChart = function (data) {
     // data is an array
     data = data.values;
-   // console.log(data);
+    // console.log(data);
 
     document.getElementsByClassName('chart')[0].innerHTML = "";
     // preparing margins
@@ -106,16 +105,16 @@ plotSimpleBarChart = function (data) {
 	    height = 500 - margin.top - margin.bottom;
 
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+    var x = d3.scale.ordinal()
+	    .rangeRoundBands([0, width], .1);
 
-	    
-	//    console.log(x);
-	    
+
+    //    console.log(x);
+
     var y = d3.scale.linear()
 	    .range([height, 0]);
 
-	    console.log(y);
+    console.log(y);
 
     // Adding axes x
     var xAxis = d3.svg.axis()
@@ -261,8 +260,29 @@ plotHistogram = function (JSONData) {
 	    .attr("d", line);
 
 };
-
-
+/**
+ * Probability Density Function
+ * @param {string} path
+ * @returns {undefined}
+ */
+plotPDF = function (path) {
+  // path string de la ubicació del fitxer json en el cache 
+    
+    
+    
+};
+/**
+ * Cumulative Distributive Function
+ * @param {string} path
+ * @returns {undefined}
+ */
+plotCDF = function (path) {
+    
+   
+    
+    
+    
+};
 displayHistogram = function (BA) {
     document.getElementById("graph").innerHTML = "";
     plotHistogram(computeHistogram(BA));
