@@ -14,6 +14,7 @@ var graphDiv = document.getElementById("graph");
 
 
 
+
 // d3.select("#graph");
 
 /*
@@ -27,7 +28,7 @@ var graphDiv = document.getElementById("graph");
  */
 
 // loop through 
-computeHistogram = function (simple, BA) {
+computeHistogram = function (BA, simple) {
 
     var stats = BA.getStats();
 // fer el hitmiss histogram 
@@ -262,27 +263,144 @@ plotHistogram = function (JSONData) {
 };
 /**
  * Probability Density Function
- * @param {string} path
+ * @param {barbasian} BA
  * @returns {undefined}
  */
-plotPDF = function (path) {
-  // path string de la ubicació del fitxer json en el cache 
-    
-    
-    
+drawPDF = function (BA) {
+    var path;
+
+    path = BA.getSetting();
+    if (!path)
+	return path;
+    var url = "../js/json/graphJSON/S" + path.size + "-D" + path.degree + ".json";
+
+
+    console.log("DrawPDF/init//" + path);
+    loadJSON(url, draw);
+    function draw(data) {
+	console.info('drawPDF');
+	// codigo:	 d3
+	var histogram = computeHistogramFromJSONCache(data);
+	console.log(histogram);
+	// target div: graphDiv
+
+	/*
+	 <div id="sectionB" class="tab-pane fade"> 
+	 <div id="graph"></div>  
+	 <svg class="chart" id="chart" ></svg>
+	 </div>
+	 */
+
+	var bin = {
+	    histo: histogram,
+	    histoSize: Object.keys(temp1.histo).length,
+	    max: Math.max.apply(Math, Object.keys(histogram)),
+	    min: Math.min.apply(Math, Object.keys(histogram)),
+	    binSize: 10 
+	};
+	
+	console.log(bin);
+	if(bin.histoSize < bin.binSize) return false; // no hi ha prou particions
+	
+
+
+    }
 };
+
+
 /**
  * Cumulative Distributive Function
- * @param {string} path
+ * @param {barbasian} BA
  * @returns {undefined}
  */
-plotCDF = function (path) {
-    
-   
-    
-    
-    
+drawCDF = function (BA) {
+    var path;
+
+    path = BA.getSetting();
+    if (!path)
+	return path;
+    var url = "../js/json/graphJSON/S" + path.size + "-D" + path.degree + ".json";
+    console.log("DrawCDF/init//" + path);
+    loadJSON(url, draw);
+    function draw(data) {
+	console.info('drawCDF');
+	var histogram = computeHistogramFromJSONCache(data);
+	console.log(histogram);
+    }
 };
+
+// enlloc de tenir-ho aixi buscar algun 
+// patro de disseny o framework que organitzi les coses
+
+function loadJSON(url, callback) {
+
+
+    $.ajax({
+	dataType: "json",
+	url: url, // tiene que ser un path absoluto (www.asdf), o relativo
+	// data: data, // request parameters to the server...
+	success: successLoad
+    });
+
+    function successLoad(data) {
+	return callback(data);
+    }
+}
+
+
+
+
+function computeHistogramFromJSONCache(data) {
+    console.info('computeHistogramFromJSONCache');
+    // compute frequency distribution
+
+    var histogram = [];
+
+    // generar una matriu, o list-linkedlist
+
+    var tmpDegreeDist = {};
+    var edgeDist = data.edges.map(function (item, idx, all) {
+	//    console.log(item.target); 
+	if (item.source in tmpDegreeDist) {
+	    tmpDegreeDist[item.source]++;
+	} else {
+	    tmpDegreeDist[item.source] = 1;
+	}
+
+	if (item.target in tmpDegreeDist) {
+	    tmpDegreeDist[item.target]++;
+	} else {
+	    tmpDegreeDist[item.target] = 1;
+	}
+
+	return item.source;
+    });
+    console.log(tmpDegreeDist);
+    console.log(edgeDist);
+
+    // to histogram
+
+    var result = Object.keys(tmpDegreeDist).forEach(function (item, idx, all) {
+	console.log(item);
+	if (tmpDegreeDist[item] in histogram)
+	{
+	    histogram[tmpDegreeDist[item]]++;
+	} else {
+
+	    histogram[tmpDegreeDist[item]] = 1;
+	}
+    });
+
+    return histogram;
+}
+
+
+
+
+
+
+
+
 displayHistogram = function (BA) {
     document.getElementById("graph").innerHTML = "";
     plotHistogram(computeHistogram(BA));
@@ -291,6 +409,6 @@ displayHistogram = function (BA) {
 displayHistogramSimple = function (BA) {
     document.getElementById("graph").innerHTML = "";
     plotSimpleBarChart(computeHistogram(BA, true));
-}
+};
 
 // TODO Angular JS,, programar por grid

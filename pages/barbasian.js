@@ -16,6 +16,7 @@ function barbasian() {
 
     /* start setting variables */
     /**************************************************************************/
+    // stack of everything?
     var stats = {
 	data: {},
 	stack: []
