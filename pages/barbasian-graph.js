@@ -293,17 +293,256 @@ drawPDF = function (BA) {
 
 	var bin = {
 	    histo: histogram,
-	    histoSize: Object.keys(temp1.histo).length,
+	    histoSize: Object.keys(histogram).length,
+	    histoProb: [],
+	    histoDegree: Object.keys(histogram),
 	    max: Math.max.apply(Math, Object.keys(histogram)),
 	    min: Math.min.apply(Math, Object.keys(histogram)),
-	    binSize: 10 
+	    binSize: 10
+
 	};
-	
+
 	console.log(bin);
-	if(bin.histoSize < bin.binSize) return false; // no hi ha prou particions
+	if (bin.histoSize < bin.binSize)
+	    return false; // no hi ha prou particions
+
+	var totalNodes = histogram.reduce(function (x, y) {
+	    return x + y;
+	});
+	console.log(totalNodes);
+	var freqHistogram = histogram.map(function (item) {
+	    return item / totalNodes;
+	});
+	console.log(freqHistogram);
+	bin.histoProb = []
+	freqHistogram.map(function (d, idx) {
+	    // console.log(d, idx)
+	    bin.histoProb[bin.histoProb.length] = {letter: idx, frequency: d};
+	});
+
+
+	// DRAW
+	// var graphDiv = document.getElementById("graph");
+
+	/*
+	 var p = d3.select("#graph").selectAll("p")
+	 .data(Object.keys(histogram))
+	 .enter()
+	 .append("p")
+	 .text(function (d, i) {
+	 return "i = " + i + " d = " + d;
+	 });
+	 */
+
+
+	var margin = {top: 20, right: 20, bottom: 30, left: 40};
+	var width = 960 - margin.left - margin.right;
+	var height = 500 - margin.top - margin.bottom;
+
+	// axis
+	// scaling to fit
+	var x = d3.scale.ordinal()
+		.rangeRoundBands([0, width], .1);
+	var y = d3.scale.linear()
+		.range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom");
+
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left")
+		.ticks(10, "%");
+
+	document.getElementById("graph").innerHTML = "";
 	
+	var svg = d3.select("#graph").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	console.log(bin.histoProb);
+	data =  bin.histoProb;
 
 
+	x.domain(data.map(function (d) {
+	    return d.letter;
+	}));
+	y.domain([0, d3.max(data, function (d) {
+		return d.frequency;
+	    })]);
+
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis)
+		.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.text("Frequency");
+
+	svg.selectAll(".bar")
+		.data(data)
+		.enter().append("rect")
+		.attr("class", "bar")
+		.attr("x", function (d) {
+		    return x(d.letter);
+		})
+		.attr("width", x.rangeBand())
+		.attr("y", function (d) {
+		    return y(d.frequency);
+		})
+		.attr("height", function (d) {
+		    return height - y(d.frequency);
+		});
+    }
+};
+
+drawPDFDomain = function (BA, domain) {
+    var path;
+
+    path = BA.getSetting();
+    if (!path)
+	return path;
+    var url = "../js/json/graphJSON/S" + path.size + "-D" + path.degree + ".json";
+
+
+    console.log("DrawPDF/init//" + path);
+    loadJSON(url, draw);
+    function draw(data) {
+	console.info('drawPDF');
+	// codigo:	 d3
+	var histogram = computeHistogramFromJSONCache(data);
+	console.log(histogram);
+	// target div: graphDiv
+
+	/*
+	 <div id="sectionB" class="tab-pane fade"> 
+	 <div id="graph"></div>  
+	 <svg class="chart" id="chart" ></svg>
+	 </div>
+	 */
+
+	var bin = {
+	    histo: histogram,
+	    histoSize: Object.keys(histogram).length,
+	    histoProb: [],
+	    histoDegree: Object.keys(histogram),
+	    max: Math.max.apply(Math, Object.keys(histogram)),
+	    min: Math.min.apply(Math, Object.keys(histogram)),
+	    binSize: 10
+
+	};
+
+	console.log(bin);
+	if (bin.histoSize < bin.binSize)
+	    return false; // no hi ha prou particions
+
+	var totalNodes = histogram.reduce(function (x, y) {
+	    return x + y;
+	});
+	console.log(totalNodes);
+	var freqHistogram = histogram.map(function (item) {
+	    return item / totalNodes;
+	});
+	console.log(freqHistogram);
+	bin.histoProb = []
+	freqHistogram.map(function (d, idx) {
+	    // console.log(d, idx)
+	    bin.histoProb[bin.histoProb.length] = {letter: idx, frequency: d};
+	});
+
+
+	// DRAW
+	// var graphDiv = document.getElementById("graph");
+
+	/*
+	 var p = d3.select("#graph").selectAll("p")
+	 .data(Object.keys(histogram))
+	 .enter()
+	 .append("p")
+	 .text(function (d, i) {
+	 return "i = " + i + " d = " + d;
+	 });
+	 */
+
+
+	var margin = {top: 20, right: 20, bottom: 30, left: 40};
+	var width = 960 - margin.left - margin.right;
+	var height = 500 - margin.top - margin.bottom;
+
+	// axis
+	// scaling to fit
+	var x = d3.scale.ordinal()
+		.rangeRoundBands([0, width], .1);
+	var y = d3.scale.linear()
+		.range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+		.scale(x)
+		.orient("bottom");
+
+	var yAxis = d3.svg.axis()
+		.scale(y)
+		.orient("left")
+		.ticks(10, "%");
+
+	document.getElementById("graph").innerHTML = "";
+	
+	var svg = d3.select("#graph").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	console.log(bin.histoProb);
+	data =  bin.histoProb;
+
+
+	x.domain(data.map(function (d) {
+	    return d.letter;
+	}));
+	y.domain([0, d3.max(data, function (d) {
+		return d.frequency;
+	    })]);
+
+	svg.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	svg.append("g")
+		.attr("class", "y axis")
+		.call(yAxis)
+		.append("text")
+		.attr("transform", "rotate(-90)")
+		.attr("y", 6)
+		.attr("dy", ".71em")
+		.style("text-anchor", "end")
+		.text("Frequency");
+
+	svg.selectAll(".bar")
+		.data(data)
+		.enter().append("rect")
+		.attr("class", "bar")
+		.attr("x", function (d) {
+		    return x(d.letter);
+		})
+		.attr("width", x.rangeBand())
+		.attr("y", function (d) {
+		    return y(d.frequency);
+		})
+		.attr("height", function (d) {
+		    return height - y(d.frequency);
+		});
     }
 };
 
@@ -381,7 +620,7 @@ function computeHistogramFromJSONCache(data) {
     // to histogram
 
     var result = Object.keys(tmpDegreeDist).forEach(function (item, idx, all) {
-	console.log(item);
+//	console.log(item);
 	if (tmpDegreeDist[item] in histogram)
 	{
 	    histogram[tmpDegreeDist[item]]++;
