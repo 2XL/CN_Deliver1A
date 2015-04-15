@@ -672,7 +672,7 @@ drawCDFDomain = function (BA, domain) {
 		histoDomain[histoDomain.length] = {letter: "-" + d.letter, frequency: frequency};
 	    } else {
 		// use absolute frequency instead of relative
-		histoDomain[histoDomain.length - 1].frequency += frequency;
+		histoDomain[histoDomain.length - 1].frequency = frequency;
 	    }
 
 
