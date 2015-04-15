@@ -41,7 +41,7 @@ function barbasian() {
     /* start user interface */
     /**************************************************************************/
 
-    var nwkSize = [20, 50, 100, 1000, 10000, 100000];	// opcions per el selector
+    var nwkSize = [50, 100, 1000, 10000, 100000];	// opcions per el selector
     var avgDegree = [2, 4, 6, 8];
     console.log("0.	Start the configuration selectors...");
 
@@ -294,10 +294,10 @@ function barbasian() {
 
 	    // push node to stack
 	    var candIdx;
-	//    console.log(listCand);
+	    //    console.log(listCand);
 	    for (var key in listCand) {
 		candIdx = tableTest[listCand[key]];
-	//	console.log(candIdx);
+		//	console.log(candIdx);
 		tableTest.splice(listCand[key], 0, candIdx);
 		tableTest.push(n.id);
 	    }
@@ -410,7 +410,94 @@ function barbasian() {
 
     this.init(config.seed, config.degree, true);
 
-}
+    this.showExponents = function () {
+	var msg = "unknown";
 
+	var path;
+
+	path = this.getSetting();
+	if (!path)
+	    return path;
+	var url = "../js/json/graphJSON/S" + path.size + "-D" + path.degree + ".json";
+
+
+	console.log("DrawPDF/init//" + path);
+	loadJSON(url, draw);
+	function draw(data) {
+	    console.info('drawPDF');
+	    // codigo:	 d3
+	    var histogram = computeHistogramFromJSONCache(data);
+	    console.log(histogram);
+	    // target div: graphDiv
+
+	    /*
+	     <div id="sectionB" class="tab-pane fade"> 
+	     <div id="graph"></div>  
+	     <svg class="chart" id="chart" ></svg>
+	     </div>
+	     */
+
+	    var bin = {
+		histo: histogram,
+		histoSize: Object.keys(histogram).length,
+		histoProb: [],
+		histoDegree: Object.keys(histogram),
+		max: Math.max.apply(Math, Object.keys(histogram)), // 1 kmax
+		min: Math.min.apply(Math, Object.keys(histogram)), // 1 kmin
+		binSize: 10,
+		binOffset: 0
+	    };
+
+
+
+	    // log of ki
+	    // 1: find Kmin & Kmax
+	    var output = {
+		klen: bin.histoDegree,
+		kmin: bin.min,
+		kmax: bin.max,
+		klog: [],
+		knum: [],
+		kinterv: [],
+		kfreq: []
+	    };
+
+	    // 2: calculate the logarithm of Ki for all the data elements
+
+	    var totalNodes = 0;
+	    histogram.map(function (item) {
+		totalNodes += item;
+	    });
+
+	    console.log(totalNodes);
+
+	    var logPk;
+	    var logk;
+	    var logC;
+	    for (var key in histogram) {
+		logPk = Math.log(histogram[key] / totalNodes);
+		logC = Math.log(histogram[key]) // població obtinguda
+		logk = Math.log(key);
+
+		output.klog[key] = (logC - logPk) / logk;
+	    }
+	    console.log(output.klog);
+
+	    // 3, 4: converse the interval into 10 offset
+
+
+
+
+
+	    document.getElementById("graph").innerHTML = "";
+	    document.getElementById("graph")
+		    .appendChild(document.createElement('pre'))
+		    .innerHTML = syntaxHighlight({powexp: output.klog}); 
+
+	}
+    };
+
+}
+ 
 
 // plot the ****
